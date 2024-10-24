@@ -1,40 +1,35 @@
-name: Build and Deploy
+name: Build and Deploy Vite App to GitHub Pages
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # Deploy when changes are pushed to the 'main' branch
+  pull_request:
+
 permissions:
   contents: write
 
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout code 🛎️
         uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '18.x'  # Use Node.js version 18.x
 
-      - name: Clear npm cache
-        run: npm cache clean --force
+      - name: Install dependencies 🔧
+        run: npm ci  # Install dependencies using npm
 
-      - name: Install Dependencies 🔧
-        run: npm ci
+      - name: Build Vite app 🏗️
+        run: npm run build  # Run Vite's build script
 
-      - name: Build Vite App 🏗️
-        run: npm run build
-
-      - name: List project files after build
-        run: ls -al dist # Vite outputs to the 'dist' folder
-
-      - name: Verify Dist Directory Exists 📂
-        run: |
-          if [ ! -d "dist" ]; then echo "Dist folder not found!"; exit 1; fi
-
-      - name: Deploy 🚀
+      - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
-          folder: dist  # Deploy the Vite 'dist' folder
+          branch: gh-pages  # Deploy to the 'gh-pages' branch
+          folder: dist  # The folder containing the output of the build (dist folder)
