@@ -23,20 +23,18 @@ jobs:
       - name: Install Dependencies 🔧
         run: npm ci
 
-      - name: Build React App 🏗️
+      - name: Build Vite App 🏗️
         run: npm run build
 
-      # Add this step to list the files in the working directory after the build
       - name: List project files after build
-        run: ls -al
+        run: ls -al dist # Vite outputs to the 'dist' folder
 
-      # Check if the build directory exists
-      - name: Verify Build Directory Exists 📂
+      - name: Verify Dist Directory Exists 📂
         run: |
-          if [ ! -d "build" ]; then echo "Build folder not found!"; exit 1; fi
+          if [ ! -d "dist" ]; then echo "Dist folder not found!"; exit 1; fi
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: build
+          folder: dist  # Deploy the Vite 'dist' folder
