@@ -3,8 +3,7 @@ name: Build and Deploy Vite App to GitHub Pages
 on:
   push:
     branches:
-      - main  # Deploy when changes are pushed to the 'main' branch
-  pull_request:
+      - main  # Change if using a different branch
 
 permissions:
   contents: write
@@ -20,16 +19,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'  # Use Node.js version 18.x
+          node-version: '18.x'  # Ensure this is a stable version
 
       - name: Install dependencies 🔧
-        run: npm ci  # Install dependencies using npm
+        run: npm ci  # Install dependencies
 
       - name: Build Vite app 🏗️
-        run: npm run build  # Run Vite's build script
+        run: npm run build  # Build the app
+
+      - name: List files in dist folder
+        run: ls -al dist  # Check contents of the dist folder
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # Deploy to the 'gh-pages' branch
-          folder: dist  # The folder containing the output of the build (dist folder)
+          branch: gh-pages  # Ensure this is set to gh-pages
+          folder: dist      # Set to the dist folder
